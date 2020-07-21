@@ -19,7 +19,7 @@
       type="text"
       name="name"
       placeholder="Digite o título do produto"
-      value={{product.name}}>
+      value="{{product.name}}">
   </div>
 </div>
 
@@ -27,6 +27,39 @@
   <div>Descrição</div>
   <div>
     <textarea name="description" placeholder="Descreva o produto">{{ product.description }}</textarea>
+  </div>
+</div>
+
+<div class="item">
+
+  <div>Fotos</div>
+
+  <div>
+
+    <div id="photos-upload">
+      <input 
+        type="file" 
+        name="photos" 
+        multiple
+        accept="image/*"
+        onchange="PhotosUpload.handleFileInput(event)">
+      <p>Selecione até 6 fotos</p>
+    </div>
+
+    <div id="photos-preview">
+      {% if files %}
+        {% for image in files %}
+          <div class="photo" id="{{image.id}}">
+            <img src="{{image.src}}" alt="{{image.name}}">
+            <i class="material-icons" 
+              onclick="PhotosUpload.removeOldPhoto(event)"
+            >close</i>
+          </div>
+        {% endfor %}
+        <input type="hidden" name="removed_files">
+      {% endif %}
+    </div>
+    
   </div>
 </div>
 
@@ -46,7 +79,7 @@
     <input 
       type="hidden"
       name="old_price"
-      value={{product.old_price}}
+      value="{{product.old_price}}"
       onkeydown="Mask.apply(this, 'formatBRL')">
   {% endif %}
 </div>
@@ -58,14 +91,14 @@
       type="number"
       name="quantity"
       placeholder="Estoque disponível"
-      value={{product.quantity}}>
+      value="{{product.quantity}}">
   </div>
 </div>
 
-{% if (product.status == '1') or (product.status == '0') %}
-  <div class="item">
-    <div>Disponível?</div>
-    <div>
+<div class="item">
+  <div>Disponível?</div>
+  <div>
+    {% if (product.status == '1') or (product.status == '0') %}
       <span>
         <input 
           type="radio"
@@ -85,6 +118,22 @@
             checked
           {% endif %}> Não
       </span>
-    </div>
+    {% else%}
+      <span>
+        <input 
+          type="radio"
+          name="status"
+          value="1"
+          checked> Sim
+      </span>
+
+      <span>
+        <input 
+          type="radio"
+          name="status"
+          value="0"> Não
+      </span>
+    {% endif %}
+
   </div>
-{% endif %}
+</div>
