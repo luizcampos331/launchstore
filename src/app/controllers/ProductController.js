@@ -86,9 +86,7 @@ module.exports = {
 
     // Get Images
     results = await Product.files(product.id)
-
-    let files = results.rows;
-    files = files.map(file => ({
+    const files = results.rows.map(file => ({
       ...file,
       src: `${req.protocol}://${req.headers.host}${file.path.replace('public', '')}`,
     }));
