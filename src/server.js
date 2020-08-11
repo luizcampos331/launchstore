@@ -1,19 +1,20 @@
-//Importando as funcionalidades do express em uma variável
 const express = require('express');
-//Importando as funcionalidade do nunjucks em uma variavel
 const nunjucks = require('nunjucks');
-
-//Importando as funcionalidades de routes em uma variável
 const routes = require('./routes');
 const methodOverride = require('method-override');
-
-const { urlencoded } = require('express');
-
+const session = require('./config/session');
 //Iniciando o express na variável server
 const server = express();
 
+//Disponibiliza durante a aplicação inteira o controle de sessão de usuário
+server.use(session);
+//Disponibiliza a sessão para todas as páginas usarem
+server.use((req, res, next) => {
+  res.locals.session = req.session
+  next()
+})
 //Responsável por liberar a passagem de dados de um formulário POST via req.body
-server.use(urlencoded({ extended: true }));
+server.use(express.urlencoded({ extended: true }));
 //Server poderá usar arquivos estáticos (css) da pasta public
 server.use(express.static('public'));
 /*Caso seja pedido, irá sobreescrever o method da página, nesse caso será para
@@ -36,4 +37,4 @@ nunjucks.configure('src/app/views', {
 });
 
 //Server ouvindo pedidos na porta 5000
-server.listen(5001);
+server.listen(5002);

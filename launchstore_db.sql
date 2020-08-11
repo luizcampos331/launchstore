@@ -41,12 +41,23 @@ CREATE TABLE "users" (
   "updated_at" timestamp DEFAULT (now())
 );
 
+CREATE TABLE "session" (
+  "sid" varchar NOT NULL COLLATE "default",
+	"sess" json NOT NULL,
+	"expire" timestamp(6) NOT NULL
+)
+WITH (OIDS=FALSE);
+
+ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
+
+CREATE INDEX "IDX_session_expire" ON "session" ("expire");
+
 -- FOREIGN KEYS
 ALTER TABLE "products" ADD FOREIGN KEY ("category_id") REFERENCES "categories" ("id");
 
-ALTER TABLE "products" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+ALTER TABLE "products" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "files" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id");
+ALTER TABLE "files" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id")  ON DELETE CASCADE;
 
 -- PROCEDURE
 CREATE FUNCTION trigger_set_timestamp()

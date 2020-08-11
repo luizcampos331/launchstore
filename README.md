@@ -4,6 +4,14 @@
   <img src="public/assets/demo.gif">
 </h1>
 
+## Apresentação
+
+<p align="center">
+  <a href="public/assets/login.gif">Login</a> |
+  <a href="public/assets/products.gif">Produtos</a>
+</p>
+
+## Indice
 <p align="center">
   <a href="#bookmark-sobre">Sobre</a> |
   <a href="#computer-tecnologias-utilizadas">Tecnologias</a> |
@@ -17,6 +25,7 @@
 ## :bookmark: Sobre
 Plataforma de compra e venda de produtos.</br>
 Conta com gerenciamento de até 6 imagens por produto.</br>
+Bloqueio de rotas por usuário logado.</br>
 Ainda em desenvolvimento...
 
 ## :computer: Tecnologias Utilizadas
@@ -31,15 +40,22 @@ Back-End:
 - Express
 - Method Override
 - Multer
+- bcryptjs
+- express-session
+- nodemailer
 
 Banco de dados:
 - PostgreSQL
 
 ## :dart: Objetivo
 Plataforma tem como objetivo disponibilizar:
+- Cadastro, visualização, edição e exclsão de usuários
 - Cadastro, Visualização, edição e exclusão de produtos
+- Controle de sessão de usuário
+- Bloqueio de rotas caso usuário não logado
+- Envio de e-mails para recuperação de senha
 
-## :package: Baixar o projeto
+## :package: Como baixar o projeto
 Pelo seu terminal, escolha um local para o projeto e rode os comandos:
 ```bash
   # Clonar o repositório

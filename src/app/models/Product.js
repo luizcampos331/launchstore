@@ -1,4 +1,5 @@
 const db = require('../../config/db');
+const fs = require('fs')
 
 module.exports = {
   all() {
@@ -23,11 +24,9 @@ module.exports = {
     //R$ 1,00 = 100
     data.price = data.price.replace(/\D/g, '')
 
-    console.log(data.user_id);
-
     const values = [
       data.category_id,
-      data.user_id || 1,
+      data.user_id,
       data.name,
       data.description,
       data.old_price || data.price,
@@ -35,8 +34,6 @@ module.exports = {
       data.quantity,
       data.status,
     ];
-
-    console.log(values);
 
     return db.query(query, values);
   },
@@ -72,8 +69,22 @@ module.exports = {
     return db.query(query, values);
   },
 
-  delete(id) {
-    return db.query(`DELETE FROM products WHERE id = $1`, [id]);
+  async delete(id) {
+    //pegar todas as imagens do produto
+    let results = await this.files(id)
+    const files = results.rows
+
+    //deletar o produto
+    await db.query(`DELETE FROM products WHERE id = $1`, [id]);
+
+    //remover as imagens da pasta public
+    files.map(file => {
+      try {
+        fs.unlinkSync(file.path)
+      } catch(error) {
+        console.error(error)
+      }
+    })
   },
 
   files(id) {

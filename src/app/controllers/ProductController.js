@@ -6,17 +6,10 @@ const { formatPrice, date } = require('../../lib/utils');
 
 module.exports = {
   // GET - Create
-  create(req, res) {
-    //Chamando a promessa do Category, depois de "all" finalizado, faça (then)
-    //caso de erro no "all" faça (catch)
-    Category.all()
-    .then(function(results) {
-      const categories = results.rows;
+  async create(req, res) {
+    const categories = await Category.all()
 
-      return res.render('products/create.njk', { categories });
-    }).catch(function(error) {
-      throw new Error(error)
-    });
+    return res.render('products/create.njk', { categories });
   },
 
   // POST
@@ -24,9 +17,12 @@ module.exports = {
     const keys = Object.keys(req.body);
 
     for(key of keys) {
-      if(req.body[key] == '')
-        return res.send('Please, fill all fields');
+      if(req.body[key] == '') return res.send('Please, fill all fields');
     }
+
+    if(req.files.length == 0) return res.send('Please, send at least one image')
+
+    req.body.user_id = req.session.userId
 
     //Guardará o resultado em results
     //await será no mesmo estilo do "then", enquanto não terminar o sistema ficará
@@ -81,8 +77,7 @@ module.exports = {
     product.old_price = formatPrice(product.old_price);
     
     // Get Categories
-    results = await Category.all();
-    const categories = results.rows;
+    const categories = await Category.all();
 
     // Get Images
     results = await Product.files(product.id)
@@ -103,7 +98,7 @@ module.exports = {
     }
 
     //Verifico se existem imagens para serem cadastradas
-    if(req.files.length != 0) {
+    if(req.files.length != 0) { 
       const newFilesPromise = req.files.map(file => File.create({...file, product_id: req.body.id}));
 
       await Promise.all(newFilesPromise);
@@ -119,18 +114,15 @@ module.exports = {
       removedFiles.splice(lastIndex, 1);
       //Crio um array de promessas de exclusão das imagens
       const removedFilesPromise = removedFiles.map(id => File.delete(id));
-      //Aguarda a criação do arquivo para seguir em em frente
+      //Aguarda a criação do arquivo para seguir em frente
       await Promise.all(removedFilesPromise);
     }
 
     req.body.price = req.body.price.replace(/\D/g, '');
-    req.body.old_price = req.body.old_price.replace(/\D/g, '');
 
-    const oldProduct = await Product.find(req.body.id);
-    
-    if(req.body.price != oldProduct.rows[0].price) {
-      if(req.body.old_price != req.body.price)
-        req.body.old_price = oldProduct.rows[0].price;
+    if(req.body.old_price != req.body.price) {
+      const oldProduct = await Product.find(req.body.id);
+      req.body.old_price = oldProduct.rows[0].price;
     }
 
     await Product.update(req.body);
@@ -139,8 +131,14 @@ module.exports = {
   },
 
   async delete(req, res) {
-    await Product.delete(req.body.id);
-
-    return res.redirect('products/create');
+    try {
+      await Product.delete(req.body.id);
+      
+      return res.render('home/index.njk', {
+        success: 'Produto deletado com sucesso!'
+      });
+    } catch(error) {
+      console.error(error);
+    }
   }
 }

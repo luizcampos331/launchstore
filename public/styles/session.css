@@ -1,0 +1,32 @@
+section.login.container,
+section.password.container {
+  max-width: 500px;
+}
+
+section.login.container .fields,
+section.password.container .fields {
+  margin-bottom: 32px;
+}
+
+section.login.container .item input[name="email"],
+section.password.container .item input[name="email"],
+section.login.container .item input[name="password"],
+section.password.container .item input[name="password"],
+section.password.container .item input[name="passwordRepeat"] {
+  max-width: 100%;
+}
+
+section.login.container ul {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+
+section.login.container ul li a {
+  color: #777;
+}
+
+section.login.container ul li a:hover {
+  color: black;
+  font-weight: bold;
+}
