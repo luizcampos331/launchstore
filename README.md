@@ -87,7 +87,10 @@ Pelo seu terminal, escolha um local para o projeto e rode os comandos:
 - Node JS (https://nodejs.org/en/)
 - PostgreSQL (https://www.postgresql.org/)
 
-Obs: utilize o conteúdo do arquivo <a href="launchstore_db.sql">launchstore_db.sql</a> para a criação do banco de dados e inserção dos primeiros dados.
+Obs: utilize o conteúdo do arquivo <a href="launchstore_db.sql">launchstore_db.sql</a> para a criação do banco de dados. Após a criação do banco de dados, crie dados fakes para testar a aplicação com o comando no terminal:
+```bash
+  $ node seed.js
+```
 
 ## :bust_in_silhouette: Autor:
 Luiz Eduardo Campos da Silva</br>

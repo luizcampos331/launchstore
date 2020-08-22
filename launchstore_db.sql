@@ -85,3 +85,5 @@ EXECUTE PROCEDURE trigger_set_timestamp();
 
 -- INSERTS
 INSERT INTO categories (name) values ('Eletrônicos');
+INSERT INTO categories (name) values ('Roupas');
+INSERT INTO categories (name) values ('Esportes');
