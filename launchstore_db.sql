@@ -1,12 +1,14 @@
-DROP DATABASE IF EXISTS launchstore;
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
 
+DROP DATABASE IF EXISTS launchstore;
 CREATE DATABASE launchstore;
 
 -- TABLES
 CREATE TABLE "products" (
   "id" SERIAL PRIMARY KEY,
   "category_id" int NOT NULL,
-  "user_id" int,
+  "user_id" int NOT NULL,
   "name" text NOT NULL,
   "description" text NOT NULL,
   "old_price" int,
@@ -37,6 +39,8 @@ CREATE TABLE "users" (
   "cpf_cnpj" text UNIQUE NOT NULL,
   "cep" text,
   "address" text,
+  "reset_token" text,
+  "reset_token_expires" text,
   "created_at" timestamp DEFAULT (now()),
   "updated_at" timestamp DEFAULT (now())
 );

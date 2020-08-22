@@ -133,6 +133,49 @@ const Validate = {
       error,
       value
     }
+  },
+
+  allFields(e) {
+    const items = document.querySelectorAll('.item input, .item select, .item textarea')
+
+    for(item of items) {
+      if(item.value == '') {
+        const message = document.createElement('div')
+        message.classList.add('messages')
+        message.classList.add('error')
+        message.style.position = 'fixed'
+        message.innerHTML = 'Todos os campos são obrigatórios!'
+        document.querySelector('body').append(message)
+
+        e.preventDefault()
+      }
+    }
+  },
+
+  allFieldsPut(e) {
+    const items = document.querySelectorAll('.item input, .item select, .item textarea')
+    const files = document.querySelectorAll('.item #photos-preview .photo')
+
+    const message = document.createElement('div')
+    message.classList.add('messages')
+    message.classList.add('error')
+    message.style.position = 'fixed'
+
+    for(item of items) {
+      if(item.value == '' && item.name != 'removed_files' && item.name != 'photos') {
+        message.innerHTML = 'Todos os campos são obrigatórios!'
+        document.querySelector('body').append(message)
+
+        e.preventDefault()
+        break
+      } else if(files.length == 0) {
+        message.innerHTML = 'Escolha pelo menos uma imagem!'
+        document.querySelector('body').append(message)
+
+        e.preventDefault()
+        break
+      }
+    }
   }
 }
 

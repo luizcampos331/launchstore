@@ -1,140 +1,173 @@
-const Product = require('../models/Product');
-const Category = require('../models/Category');
-const File = require('../models/File');
+const { unlinkSync } = require('fs')
 
-const { formatPrice, date } = require('../../lib/utils');
+const Category = require('../models/Category');
+const Product = require('../models/Product');
+const File = require('../models/File');
+const LoadProductService = require('../service/LoadProductService');
 
 module.exports = {
-  // GET - Create
   async create(req, res) {
-    const categories = await Category.all()
-
-    return res.render('products/create.njk', { categories });
+    try {
+      const categories = await Category.findAll()
+  
+      return res.render('products/create', { categories });
+      
+    } catch (error) {
+      console.error(error);
+    }
   },
 
-  // POST
   async post(req, res) {
-    const keys = Object.keys(req.body);
+    try {      
+      // === Disrupt req.body
+      let { category_id, name, description, 
+        old_price, price, quantity, status } = req.body
 
-    for(key of keys) {
-      if(req.body[key] == '') return res.send('Please, fill all fields');
+      // === Format Price
+      price = price.replace(/\D/g,'')
+
+      // === Create Product
+      const product_id = await Product.create({
+        category_id, 
+        user_id: req.session.userId,
+        name, 
+        description, 
+        old_price: old_price || price, 
+        price, 
+        quantity, 
+        status: status || 1
+      })
+  
+      // === Create Files
+      if(req.files.length != 0) {
+        //Guarda na variável filesPromises um array de promessas, no caso a inserção da imagem no banco
+        const filesPromise = req.files.map(file => 
+          File.create({ name: file.filename, path: file.path, product_id }));
+        //Espera a criação do arquivo para seguir em frente
+        await Promise.all(filesPromise);
+      }
+  
+      // === End
+      return res.redirect(`/products/${product_id}`);
+      
+    } catch (error) {
+      console.error(error)
     }
-
-    if(req.files.length == 0) return res.send('Please, send at least one image')
-
-    req.body.user_id = req.session.userId
-
-    //Guardará o resultado em results
-    //await será no mesmo estilo do "then", enquanto não terminar o sistema ficará
-    //parado nessa linha, sempre que usar await, a function tem que ser "async"
-    let results = await Product.create(req.body)
-    const productId = results.rows[0].id;
-
-    if(req.files.length != 0) {
-      //Guarda na variável filesPromises um array de promessas, no caso a inserção da imagem no banco
-      const filesPromise = req.files.map(file => File.create({...file, product_id: productId}));
-      //Espera a criação do arquivo para seguir em frente
-      await Promise.all(filesPromise);
-    }
-
-    return res.redirect(`/products/${productId}`);
   },
 
-  // GET - Show
   async show(req, res) {
-    let results = await Product.find(req.params.id);
-    const product = results.rows[0];
-
-    if(!product) return res.send('Product not found!');
-
-    const { year, month, day, hour, minute } = date(product.updated_at)
-
-    product.published = {
-      day: `${day}/${month}/${year}`,
-      hour: `${hour}:${minute}`
+    try {
+      const product = await LoadProductService.load('product', {
+        where: {
+          id: req.params.id
+        }
+      })
+  
+      return res.render('products/show', { product });
+      
+    } catch (error) {
+      console.error(error)
     }
-
-    product.oldPrice = formatPrice(product.old_price);
-    product.price = formatPrice(product.price);
-
-    results = await Product.files(product.id);
-    const files = results.rows.map(file => ({
-      ...file,
-      src: `${req.protocol}://${req.headers.host}${file.path.replace('public', '')}`,
-    }));
-
-    return res.render('products/show.njk', { product, files });
   },
  
-  // GET - Edit
   async edit(req, res) {
-    let results = await Product.find(req.params.id)
-    const product = results.rows[0];
-
-    if(!product) return res.send('Product not found!')
-
-    product.price = formatPrice(product.price);
-    product.old_price = formatPrice(product.old_price);
-    
-    // Get Categories
-    const categories = await Category.all();
-
-    // Get Images
-    results = await Product.files(product.id)
-    const files = results.rows.map(file => ({
-      ...file,
-      src: `${req.protocol}://${req.headers.host}${file.path.replace('public', '')}`,
-    }));
-
-    return res.render('products/edit.njk', { product, categories, files });
+    try {
+      const product = await LoadProductService.load('product', {
+        where: {
+          id: req.params.id
+        }
+      })
+      
+      // === Select Categories
+      const categories = await Category.findAll();
+  
+      // === End
+      return res.render('products/edit', { product, categories });
+      
+    } catch (error) {
+      console.error(error)
+    }
   },
 
   async put(req, res) {
-    const keys = Object.keys(req.body);
+    try {  
+      //Verifico se existem imagens para serem cadastradas
+      if(req.files.length != 0) { 
+        const newFilesPromise = req.files.map(file => 
+          File.create({name: file.filename, path: file.path, product_id: req.body.id}));
+  
+        await Promise.all(newFilesPromise);
+      }
+  
+      //Verifico se o input removed_files existe
+      if(req.body.removed_files) {        
+        //Guardo os vlores contidos nele como um array
+        const removedFiles = req.body.removed_files.split(',');
+        //Guarda o index da ultima posição do array
+        const lastIndex = removedFiles.length -1
+        //Removo a ultima posição pois não tera nenhum valor guardado
+        removedFiles.splice(lastIndex, 1);
 
-    for(key of keys) {
-      if(req.body[key] == '' && key != "removed_files")
-        return res.send('Please, fill all fields');
+        // === Select Files
+        const filesPromise = removedFiles.map(id => File.find(id));
+        const files = await Promise.all(filesPromise)
+
+        // === Delete Files
+        //Crio um array de promessas de exclusão das imagens
+        const removedFilesPromise = removedFiles.map(id => File.delete(id));
+        //Aguarda a criação do arquivo para seguir em frente
+        await Promise.all(removedFilesPromise);
+
+        // === Unlink Files
+        files.map(file => {
+          try {
+            unlinkSync(file.path)
+          } catch (error) {
+            console.error(error)
+          }
+        })
+      }
+  
+      req.body.price = req.body.price.replace(/\D/g, '');
+      req.body.old_price = req.body.old_price.replace(/\D/g, '');
+  
+      if(req.body.old_price != req.body.price) {
+        const oldProduct = await Product.find(req.body.id);
+        req.body.old_price = oldProduct.price;
+      }
+  
+      await Product.update(req.body.id, {
+        category_id: req.body.category_id,
+        name: req.body.name,
+        description: req.body.description,
+        old_price: req.body.old_price,
+        price: req.body.price,
+        quantity: req.body.quantity,
+        status: req.body.status
+      });
+  
+      return res.redirect(`/products/${req.body.id}`);  
+      
+    } catch (error) {
+      console.error(error)
     }
-
-    //Verifico se existem imagens para serem cadastradas
-    if(req.files.length != 0) { 
-      const newFilesPromise = req.files.map(file => File.create({...file, product_id: req.body.id}));
-
-      await Promise.all(newFilesPromise);
-    }
-
-    //Verifico se o input removed_files existe
-    if(req.body.removed_files) {
-      //Guardo os vlores contidos nele como um array
-      const removedFiles = req.body.removed_files.split(',');
-      //Guarda o index da ultima posição do array
-      const lastIndex = removedFiles.length -1
-      //Removo a ultima posição pois não tera nenhum valor guardado
-      removedFiles.splice(lastIndex, 1);
-      //Crio um array de promessas de exclusão das imagens
-      const removedFilesPromise = removedFiles.map(id => File.delete(id));
-      //Aguarda a criação do arquivo para seguir em frente
-      await Promise.all(removedFilesPromise);
-    }
-
-    req.body.price = req.body.price.replace(/\D/g, '');
-
-    if(req.body.old_price != req.body.price) {
-      const oldProduct = await Product.find(req.body.id);
-      req.body.old_price = oldProduct.rows[0].price;
-    }
-
-    await Product.update(req.body);
-
-    return res.redirect(`/products/${req.body.id}`);  
   },
 
   async delete(req, res) {
     try {
+      const files = await Product.files(req.body.id)
+
       await Product.delete(req.body.id);
-      
-      return res.render('home/index.njk', {
+
+      files.map(file => {
+        try {
+          unlinkSync(file.path)
+        } catch (error) {
+          console.error(error)
+        }
+      })
+
+      return res.render('products/create.njk', {
         success: 'Produto deletado com sucesso!'
       });
     } catch(error) {

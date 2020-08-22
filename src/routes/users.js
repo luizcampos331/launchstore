@@ -4,13 +4,15 @@ const routes = express.Router();
 //Controllers
 const SessionController = require('../app/controllers/SessionController.js');
 const UserController = require('../app/controllers/UserController');
+const OrderController = require('../app/controllers/OrderController');
 
 //Validações antes de ir para a rota
 const UserValidator = require('../app/validators/User');
 const SessionValidator = require('../app/validators/Session');
 
 //Verificações antes de ir pra rota
-const { isLoggedRedirectToUsers, onlyUsers } = require('../app/middlewares/session')
+const { isLoggedRedirectToUsers, onlyUsers } = require('../app/middlewares/session');
+const User = require('../app/models/User.js');
 
 // === LOGIN / LOGOUT ===
 /* isLoggedRedirectToUsers = verifica se o usuário esta logado, caso não esteja
@@ -40,7 +42,11 @@ caso não, vai para tela de registro
 */
 routes.get('/', onlyUsers, UserValidator.show, UserController.show);
 //UserValidator.update valida o formulário antes de atualizar um usuário
-routes.put('/', UserValidator.update, UserController.update);
+routes.put('/', onlyUsers, UserValidator.update, UserController.update);
 routes.delete('/', UserController.delete);
+
+routes.get('/ads', onlyUsers, UserController.ads);
+
+routes.post('/orders', onlyUsers, OrderController.post)
 
 module.exports = routes;

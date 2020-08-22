@@ -4,23 +4,19 @@
   <img src="public/assets/demo.gif">
 </h1>
 
-## Apresentação
-
-<p align="center">
-  <a href="public/assets/login.gif">Login</a> |
-  <a href="public/assets/products.gif">Produtos</a>
-</p>
-
 ## Indice
-<p align="center">
-  <a href="#bookmark-sobre">Sobre</a> |
-  <a href="#computer-tecnologias-utilizadas">Tecnologias</a> |
-  <a href="#dart-objetivo">Objetivo</a> |
-  <a href="#package-como-baixar-o-projeto">Baixar</a> |
-  <a href="#gear-requisitos">Requisitos</a> |
-  <a href="#bust_in_silhouette-autor">Autor</a> |
-  <a href="#pencil-licença">Licença</a>
+<p>
+  <p>- <a href="#bookmark-sobre">Sobre</a></p>
+  <p>- <a href="#camera-galeria-de-fotos">Galeria de fotos</a></p> 
+  <p>- <a href="#computer-tecnologias-utilizadas">Tecnologias</a></p>
+  <p>- <a href="#dart-objetivo">Objetivo</a></p>
+  <p>- <a href="#package-como-baixar-o-projeto">Baixar</a></p>
+  <p>- <a href="#gear-requisitos">Requisitos</a></p>
+  <p>- <a href="#bust_in_silhouette-autor">Autor</a></p>
+  <p>- <a href="#pencil-licença">Licença</a></p>
 </p>
+
+<h1></h1>
 
 ## :bookmark: Sobre
 Plataforma de compra e venda de produtos.</br>
@@ -28,12 +24,24 @@ Conta com gerenciamento de até 6 imagens por produto.</br>
 Bloqueio de rotas por usuário logado.</br>
 Ainda em desenvolvimento...
 
+## :camera: Galeria de fotos
+
+<h1></h1>
+  <a><img src="public/assets/home.png" width="300px"></a>
+  <a><img src="public/assets/create.png" width="300px"></a>
+  <a><img src="public/assets/list-buy.png" width="300px"></a>
+  <a><img src="public/assets/search.png" width="300px"></a>
+  <a><img src="public/assets/details.png" width="300px"></a>
+  <a><img src="public/assets/order.png" width="300px"></a>
+<h1></h1>
+
 ## :computer: Tecnologias Utilizadas
 Front-End:
 - HTML
 - CSS
 - Nunjucks
 - JavaScript
+- Lottie
 
 Back-End:
 - NodeJS
@@ -43,12 +51,14 @@ Back-End:
 - bcryptjs
 - express-session
 - nodemailer
+- Faker (Criação de dados fakes para testes)
 
 Banco de dados:
 - PostgreSQL
 
 ## :dart: Objetivo
 Plataforma tem como objetivo disponibilizar:
+- Compra e venda de produtos
 - Cadastro, visualização, edição e exclsão de usuários
 - Cadastro, Visualização, edição e exclusão de produtos
 - Controle de sessão de usuário

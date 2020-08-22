@@ -162,11 +162,6 @@ form .item #photos-preview img {
   opacity: 1;
 }
 
-/* USER REGISTER */
-.user-register.container.form {
-  max-width: 500px;
-}
-
 .form input[name="email"],
 .form input[name="password"],
 .form input[name="passwordRepeat"],
