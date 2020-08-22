@@ -30,8 +30,10 @@ Ainda em desenvolvimento...
 
 ## :camera: Galeria de fotos
 
-![](public/assets/home.png)  |  ![](public/assets/create.png)  |  ![](public/assets/list-buy.png)
+Home                       |  Novo produto             |  Anúncios do vendedor
 :-------------------------:|:-------------------------:|:-------------------------:
+![](public/assets/home.png)  |  ![](public/assets/create.png)  |  ![](public/assets/list-buy.png)
+Pesquisa de produtos       |  Detalhes do produto      |  Compra de um produto
 ![](public/assets/search.png)  |  ![](public/assets/details.png)  |  ![](public/assets/order.png)
 
 ## :computer: Tecnologias Utilizadas
