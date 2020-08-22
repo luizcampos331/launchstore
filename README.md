@@ -24,16 +24,15 @@ Conta com gerenciamento de até 6 imagens por produto.</br>
 Bloqueio de rotas por usuário logado.</br>
 Ainda em desenvolvimento...
 
+  
+
+  
+
 ## :camera: Galeria de fotos
 
-<h1></h1>
-  <a><img src="public/assets/home.png" width="300px"></a>
-  <a><img src="public/assets/create.png" width="300px"></a>
-  <a><img src="public/assets/list-buy.png" width="300px"></a>
-  <a><img src="public/assets/search.png" width="300px"></a>
-  <a><img src="public/assets/details.png" width="300px"></a>
-  <a><img src="public/assets/order.png" width="300px"></a>
-<h1></h1>
+![](public/assets/home.png)  |  ![](public/assets/create.png)  |  ![](public/assets/list-buy.png)
+:-------------------------:|:-------------------------:|:-------------------------:
+![](public/assets/search.png)  |  ![](public/assets/details.png)  |  ![](public/assets/order.png)
 
 ## :computer: Tecnologias Utilizadas
 Front-End:
