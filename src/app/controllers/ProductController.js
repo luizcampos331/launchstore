@@ -77,6 +77,8 @@ module.exports = {
           id: req.params.id
         }
       })
+
+      if(!product) return res.send('Product not found')
       
       // === Select Categories
       const categories = await Category.findAll();

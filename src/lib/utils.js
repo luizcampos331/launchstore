@@ -7,7 +7,7 @@ module.exports = {
     const day = `0${date.getDate()}`.slice(-2);
 
     const hour = date.getHours();
-    const minute = date.getMinutes();
+    const minute = `0${date.getMinutes()}`.slice(-2);
 
     return {
       year,

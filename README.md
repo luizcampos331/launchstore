@@ -22,21 +22,21 @@
 Plataforma de compra e venda de produtos.</br>
 Conta com gerenciamento de até 6 imagens por produto.</br>
 Bloqueio de rotas por usuário logado.</br>
-Ainda em desenvolvimento...
-
-  
-
-  
+Gerenciamento das compras e vendas.<br>
 
 ## :camera: Galeria de fotos
 
 Home                       |  Novo produto             |  Anúncios do vendedor
 :-------------------------:|:-------------------------:|:-------------------------:
-![](public/assets/home.png)  |  ![](public/assets/create.png)  |  ![](public/assets/list-buy.png)
+![](public/assets/home.png)  |  ![](public/assets/create.png)  |  ![](public/assets/list-seller.png)
 
-Pesquisa de produtos       |  Detalhes do produto      |  Compra de um produto
+Pesquisa de produtos       |  Detalhes do produto      |  Carrinho de compras
 :-------------------------:|:-------------------------:|:-------------------------:
-![](public/assets/search.png)  |  ![](public/assets/details.png)  |  ![](public/assets/order.png)
+![](public/assets/search.png)  |  ![](public/assets/details.png)  |  ![](public/assets/cart.png)
+
+Conta de usuário           |  Meus pedidos             |  Minhas vendas
+:-------------------------:|:-------------------------:|:-------------------------:
+![](public/assets/account.png)  |  ![](public/assets/buy.png)  |  ![](public/assets/sales.png)
 
 ## :computer: Tecnologias Utilizadas
 Front-End:
@@ -62,11 +62,12 @@ Banco de dados:
 ## :dart: Objetivo
 Plataforma tem como objetivo disponibilizar:
 - Compra e venda de produtos
+- Gerenciamento de pedidos de compra e venda
 - Cadastro, visualização, edição e exclsão de usuários
 - Cadastro, Visualização, edição e exclusão de produtos
 - Controle de sessão de usuário
 - Bloqueio de rotas caso usuário não logado
-- Envio de e-mails para recuperação de senha
+- Envio de e-mails para recuperação de senha e compra de produtos
 
 ## :package: Como baixar o projeto
 Pelo seu terminal, escolha um local para o projeto e rode os comandos:
